@@ -11,8 +11,8 @@ function add-agent {
   )
   process {
     $ts = get-date -f "MMddyyyyhhmm"
-    copy-item .\temp -Destination .\temp-$ts
-    $c = Get-Content -Path .\temp| ConvertFrom-Json -AsHashtable
+    copy-item .\vc-agent-007 -Destination .\vc-agent-007-$ts
+    $c = Get-Content -Path .\vc-agent-007| ConvertFrom-Json -AsHashtable
     $agentcount = $c.'drv-manual-host-uri'| Measure-Object | Select-Object -ExpandProperty Count
     $creds = $username + "@" + $pw
     $pg = "$newhost"+":"+"$creds"+":5432/postgres?sslenabled=true&sslmode=require"
@@ -21,7 +21,7 @@ function add-agent {
           "drv-manual-query-capture"  = "poll"
           "drv-manual-host-uri"       = $c.'drv-manual-host-uri', $pg
       }
-      $outconfig | ConvertTo-Json -depth 100 | out-file .\temp -Force
+      $outconfig | ConvertTo-Json -depth 100 | out-file .\vc-agent-007 -Force
     }
     if($agentcount -ge 2){
       @($c['drv-manual-host-uri'] += $pg)
@@ -29,7 +29,7 @@ function add-agent {
           "drv-manual-query-capture"  = "poll"
           "drv-manual-host-uri"       = $c.'drv-manual-host-uri'
         }
-        $outconfig | ConvertTo-Json -depth 100 | out-file .\temp -Force
+        $outconfig | ConvertTo-Json -depth 100 | out-file .\vc-agent-007 -Force
     }
   }
 }
@@ -42,7 +42,7 @@ function remove-agent {
     [string]$hostname
   )
   process {
-    $c = Get-Content -Path .\temp| ConvertFrom-Json -AsHashtable
+    $c = Get-Content -Path .\vc-agent-007| ConvertFrom-Json -AsHashtable
     $uri = $c.PSObject.Properties.Value.'drv-manual-host-uri'
     $remove = $uri| Where-Object{$_ -notmatch "$hostname"}
     @($c['drv-manual-host-uri'] = $remove)
@@ -50,13 +50,13 @@ function remove-agent {
       "drv-manual-query-capture"  = "poll"
       "drv-manual-host-uri"       = $c.'drv-manual-host-uri'
     }
-    $outconfig | ConvertTo-Json -depth 100 | out-file .\temp -Force  
+    $outconfig | ConvertTo-Json -depth 100 | out-file .\vc-agent-007 -Force  
   }
 }  
 # remove-agent
 ##########################
 function get-agent {
-  $c = Get-Content -Path .\temp| ConvertFrom-Json -AsHashtable
+  $c = Get-Content -Path .\vc-agent-007| ConvertFrom-Json -AsHashtable
   $uri = $c.PSObject.Properties.Value.'drv-manual-host-uri'
   if($uri.Count -eq 1){
     write-host "$($uri.Count) configuration in this file " -BackgroundColor Black -ForegroundColor Yellow
