@@ -4,8 +4,8 @@ import datetime
 
 def add_agent(username, newhost, pw):
     ts = datetime.datetime.now().strftime("%m%d%Y%H%M")
-    shutil.copyfile("./vc-agent-007", f"./vc-agent-007-{ts}")
-    with open("./vc-agent-007", "r") as file:
+    shutil.copyfile("./vc-agent-007.conf", f"./vc-agent-007.conf-{ts}")
+    with open("./vc-agent-007.conf", "r") as file:
         content = json.load(file)
 
     agentcount = len(content["drv-manual-host-uri"])
@@ -18,11 +18,11 @@ def add_agent(username, newhost, pw):
     elif agentcount >= 2:
         content["drv-manual-host-uri"].append(pg)
 
-    with open("./vc-agent-007", "w") as file:
+    with open("./vc-agent-007.conf", "w") as file:
         json.dump(content, file, indent=4)
 
 def remove_agent(hostname):
-    with open("./vc-agent-007", "r") as file:
+    with open("./vc-agent-007.conf", "r") as file:
         content = json.load(file)
 
     uri = content["drv-manual-host-uri"]
@@ -30,11 +30,11 @@ def remove_agent(hostname):
 
     content["drv-manual-host-uri"] = remove
 
-    with open("./vc-agent-007", "w") as file:
+    with open("./vc-agent-007.conf", "w") as file:
         json.dump(content, file, indent=4)
 
 def get_agent():
-    with open("./vc-agent-007", "r") as file:
+    with open("./vc-agent-007.conf", "r") as file:
         content = json.load(file)
 
     uri = content["drv-manual-host-uri"]
@@ -51,4 +51,4 @@ def get_agent():
 # Example usage:
 # add_agent("username", "newhost", "password")
 # remove_agent("hostname")
-# get_agent()
+get_agent()
