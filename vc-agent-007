@@ -1,4 +1,0 @@
-{
-  "drv-manual-host-uri": "myhost02:myuser02@mypw02:5432/postgres?sslenabled=true&sslmode=require",
-  "drv-manual-query-capture": "poll"
-}
